@@ -138,6 +138,7 @@ class BarangMasukController extends Controller
     public function getbarang($id){
         $barang = DB::table('barang')->where('id',$id)->get();
         return $barang[0];
+      
 
     }
 

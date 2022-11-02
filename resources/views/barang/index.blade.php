@@ -51,18 +51,10 @@
 														&nbsp;
 														<button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='{{ route('barang.edit',$row->id) }}'"><i class='fa fa-edit'></i></button>
 														&nbsp;
-															<!-- <form action="{{ route('barang.edit',$row->id) }}" method="GET">
-																@csrf
-															<button type="submit" class="btn btn-primary btn-block" ><i class="fa fa-edit"></i></button>
-															<form>
-															&nbsp; -->
-															<!-- <a type="button" data-toggle="tooltip" href="{{ route('barang.edit',$row->id) }}" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-																<i class="fa fa-edit"></i>
-														    </a> -->
-															<form action="{{ route('barang.destroy',$row->id) }}" method="POST">
+															<form action="{{URL::to('/')}}/barang/{{ $row->id }}" method="POST">
 															@csrf
                     										@method('DELETE')
-															<button type="submit" onclick="return confirm('Apakah anda ingin menghapus data ini?')" class="btn btn-danger btn-xs" ><i class="fa fa-trash"></i></button>
+															<button type="submit" onclick="deleteConfirm(event)" class="btn btn-danger btn-xs" ><i class="fa fa-trash"></i></button>
 															<!-- <button type="submit" onclick="return confirm('Apakah anda ingin menghapus data ini?')" data-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove">
 																<i class="fa fa-times"></i>
 															</button> -->
@@ -94,7 +86,7 @@
 	@include('sweetalert::alert')
 	<!-- Datatables -->
 	<script src="{{asset('template')}}/assets/js/plugin/datatables/datatables.min.js"></script>
-	
+	<script src="{{asset('template')}}/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 	<script >
 		$(document).ready(function() {
 			$('#basic-datatables').DataTable({
@@ -133,6 +125,22 @@
 
 			
 		});
+
+		window.deleteConfirm = function (e) {
+				e.preventDefault();
+				var form = e.target.form;
+				swal({
+					title: "Apakah anda ingin menghapus data?",
+					icon: "warning",
+					buttons: true,
+					dangerMode: true,
+				})
+				.then((willDelete) => {
+					if (willDelete) {
+						form.submit();
+					}
+				});
+		}
 	</script>
 </body>
 </html>

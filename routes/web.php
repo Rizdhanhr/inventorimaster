@@ -54,3 +54,4 @@ Route::get('/getpelanggan/{id}', [SuratJalanController::class,'getpelanggan']);
 Route::resource('/datamutasi', MutasiBarangController::class);
 Route::get('/carimutasi',[MutasiBarangController::class,'getmutasi']);
 Route::resource('/stokmenipis', StokMenipisController::class);
+Route::get('/suratjalancetak/{no_trx}',[SuratJalanController::class,'cetak']);

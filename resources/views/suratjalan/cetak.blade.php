@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Barang Keluar</title>
+	<title>Surat Jalan Cetak</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
 	<link rel="icon" href="../../assets/img/icon.ico" type="image/x-icon"/>
 	@include('layouts.header')
@@ -18,11 +18,7 @@
 							<div class="card">
 								<div class="card-header">
 								<div class="d-flex align-items-center">
-									<h4 class="card-title">Barang Keluar</h4>
-									<a href="{{route('barangkeluar.create')}}" class="btn btn-primary btn-round ml-auto">
-											<i class="fa fa-plus"></i>
-											Add Row
-										</a>
+									<h4 class="card-title">Surat Jalan Cetak</h4>
 								</div>
 								</div>
 								<div class="card-body">
@@ -30,41 +26,33 @@
 										<table id="basic-datatables" class="display table table-striped table-hover" >
 											<thead>
 												<tr>
-													<th with="100px">No</th>
-                                                    <th>No Trx</th>
-													<th>Tanggal</th>
-                                                    <th>Total Barang</th>
-													
-													<th width="100px">Action</th>
+													<th width="100px">No</th>
+													<th>Nomor Surat</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Barang</th>
+                                                    <th>Jumlah</th>
+                                                    <th>Tujuan</th>
+                                                    <th>Driver</th>
 												</tr>
 											</thead>
 											<tbody>
 												@php $no = 1; @endphp
-												@foreach ($barangkeluar as $row)
+												@foreach ($cetaksurat as $row)
 												<tr>
 													<td>{{$no++}}</td>
-													<td>{{$row->no_trx}}</td>
+													<td>{{$row->no_surat}}</td>
                                                     <td>{{$row->tgl}}</td>
-                                                    <td>{{$row->jumlah_barang}}</td>
-													{{-- <td>{{$row->tgl}}</td> --}}
-													<td>
+                                                    <td>{{ $row->barang_id }}</td>
+                                                    <td>{{ $row->jml }}</td>
+                                                    <td>{{$row->nama_pelanggan}}</td>
+                                                    <td>{{$row->driver}}</td>
+													{{-- <td>
 														<div class="form-button-action">
-															@if($row->surat == '0')
-															<button type="button" class="btn btn-success btn-xs" onclick="window.location.href='{{ route('suratjalan.show',$row->no_trx) }}'">Surat</i></button>
-															&nbsp;
-															@elseif($row->surat == '1')
-															<button type="button" class="btn btn-warning btn-xs" onclick="window.location.href='{{ route('suratjalan.show',$row->no_trx) }}'">Cetak</i></button>
-															&nbsp;
-															@endif
-															<button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='{{ route('barangkeluar.show',$row->no_trx) }}'">Detail</i></button>
-															&nbsp;
-															
-															<form action="{{route('barangkeluar.destroy',$row->no_trx)}}" method="POST">
-															@csrf
-															@method('DELETE')
-															<button type="button" class="btn btn-danger btn-xs" onclick="return confirm('Apakah anda ingin menghapus data ini?')">Batal</button>
+															<button type="button" onclick="window.location.href='/suratjalancetak/{{ $row->no_trx }}'" class="btn btn-primary btn-sm">
+																Cetak
+														    </button>
 														</div>
-													</td>
+													</td> --}}
 												</tr>
 												@endforeach
 											</tbody>
@@ -84,7 +72,8 @@
 	@include('sweetalert::alert')
 	<!-- Datatables -->
 	<script src="{{asset('template')}}/assets/js/plugin/datatables/datatables.min.js"></script>
-	<script >
+	
+	<script>
 		$(document).ready(function() {
 			$('#basic-datatables').DataTable({
 			});
@@ -122,6 +111,9 @@
 
 			
 		});
+
+		
+		
 	</script>
 </body>
 </html>

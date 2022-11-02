@@ -14,7 +14,11 @@ class SuratJalanController extends Controller
      */
     public function index()
     {
-        //
+        $suratjalan = DB::table('surat_jalan')
+        ->join('pelanggan','pelanggan.id','surat_jalan.id_pelanggan')
+        ->get(array('surat_jalan.*','pelanggan.nama as nama_pelanggan'));
+        return view('suratjalan.index',compact('suratjalan'));
+
     }
 
     /**
@@ -36,10 +40,33 @@ class SuratJalanController extends Controller
      */
     public function store(Request $request)
     {
-        $surat = DB::table('surat_jalan')->insert([
-            'no_surat' => $request->no_surat
-        ]);
-        DD($surat);
+
+        // $this->validate($request,[
+        //     'tgl' => 'required',
+        //     'pelanggan' => 'required',
+        //     'driver' => 'required',
+        //     'no_hp' => 'required',
+        //     'ket' => 'required'
+        // ]);
+            try{
+                DB::transaction(function () use($request) {
+                    $surat = DB::table('surat_jalan')->insert([
+                        'no_surat' => $request->no_surat,
+                        'no_trx' => $request->no_trx,
+                        'no_hp' => $request->no_hp,
+                        'tgl' => $request->tgl,
+                        'id_pelanggan' => $request->pelanggan,
+                        'driver' => $request->no_hp,
+                        'nopol' => $request->nopol,
+                        'ket' => $request->ket
+                    ]);
+                });
+                return redirect('/suratjalan')->with('success','Data Berhasil Disimpan');
+            }catch(Exception $e){
+                return redirect('/barangkeluar')->with('error','Data Gagal Disimpan');
+            }
+       
+        
     }
 
     /**
@@ -90,9 +117,9 @@ class SuratJalanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $no_trx)
     {
-        //
+        
     }
 
     /**
@@ -109,6 +136,20 @@ class SuratJalanController extends Controller
     public function getpelanggan($id){
         $getpelanggan = DB::table('pelanggan')->where('id',$id)->get();
         return $getpelanggan[0];
+    }
+
+    public function cetak($no_trx){
+        $cetaksurat =  DB::table('surat_jalan')
+        ->join('barang_keluar','barang_keluar.no_trx','surat_jalan.no_trx')
+        ->join('pelanggan','pelanggan.id','=','surat_jalan.id_pelanggan')
+
+        ->select('surat_jalan.*','barang_keluar.id_barang as barang_id','pelanggan.nama as nama_pelanggan','barang_keluar.jumlah as jml')
+        ->where('surat_jalan.no_trx',$no_trx)
+    
+        ->get();
+        return view('suratjalan.cetak',compact('cetaksurat'));
+
+        // DD($cetaksurat);
     }
 
     

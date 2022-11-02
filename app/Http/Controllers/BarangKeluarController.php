@@ -14,15 +14,20 @@ class BarangKeluarController extends Controller
      */
     public function index()
     {
-        $barangkeluar = DB::table('barang_keluar')
-        ->join('barang', 'barang.id','barang_keluar.id_barang')
-        ->select(DB::raw('count(*) as jumlah_barang, no_trx'))
-        ->where('status',1)
-        ->groupBy('barang_keluar.no_trx')
-        ->get(array(
-            'barang_keluar.*',
-            'barang.nama as nama_barang'
-        ));
+        $barangkeluar = DB::select('select barang_keluar.no_trx, barang_keluar.surat, barang_keluar.tgl, count(no_trx) as jumlah_barang
+        from barang_keluar join barang on barang.id = barang_keluar.id_barang 
+        where status = 1 group by barang_keluar.no_trx, barang_keluar.tgl, barang_keluar.surat ');
+        // $barangkeluar = DB::query('barang_keluar')
+        // ->join('barang', 'barang.id','barang_keluar.id_barang')
+        // // ->select(DB::raw('count(*) as jumlah_barang, no_trx'))
+        // ->where('status',1)
+        // ->groupBy('barang_keluar.no_trx')
+        // ->get(array(
+            
+        //     'barang_keluar.no_trx'
+           
+        // ));
+        // DD($barangkeluar[]);
         return view('barangkeluar.index', compact('barangkeluar'));
     }
 

@@ -52,7 +52,7 @@
 															<form action="{{ route('kategori.destroy',$row->id) }}"  method="POST">
 															@csrf
                     										@method('DELETE')
-															<button type="submit" onclick="return confirm('Apakah anda ingin menghapus data ini?')" class="btn  btn-danger btn-xs">
+															<button type="submit" onclick="deleteConfirm(event)" class="btn  btn-danger btn-xs">
 																Hapus
 															</button>
 															</form>
@@ -118,6 +118,21 @@
 		});
 
 		
+		window.deleteConfirm = function (e) {
+				e.preventDefault();
+				var form = e.target.form;
+				swal({
+					title: "Apakah anda ingin menghapus data?",
+					icon: "warning",
+					buttons: true,
+					dangerMode: true,
+				})
+				.then((willDelete) => {
+					if (willDelete) {
+						form.submit();
+					}
+				});
+		}
 	</script>
 </body>
 </html>

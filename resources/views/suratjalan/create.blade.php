@@ -23,8 +23,10 @@
 								<div class="card">
 									<div class="card-body">
 									<h5 class="card-title mb-2 fw-mediumbold">Form Surat Jalan</h5>
-									<form action="" method="POST" enctype="multipart/form-data">
+									@foreach ($namabarang as $row)
+									<form action="{{ route('suratjalan.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
+									<input type="hidden" value="{{$row->no_trx}}" name="no_trx" readonly>
                                     <div class="card-body">
 									<div class="form-group">
 										<label for="exampleInputEmail1">No Surat</label>
@@ -33,10 +35,11 @@
 									<div class="form-group">
 										<label for="exampleInputEmail1">Tanggal</label>
 										<input type="date" class="form-control" name="tgl">
+										<span style="color: red">@error('tgl') {{ $message }} @enderror</span>
 									</div>
 									<div class="form-group">
                                         <label for="exampleInputEmail1">Pilih Pelanggan</label>
-                                        <select onchange="getnama(this.value)" id="barang" name="barang" class="form-control" aria-label="Default select example">
+                                        <select onchange="getnama(this.value)" id="barang" name="pelanggan" class="form-control" aria-label="Default select example">
                                             <option selected>Pilih Pelanggan</option>
                                             @foreach ($pelanggan as $row)
                                             <option value="{{$row->id}}">{{$row->nama}}</option>
@@ -54,19 +57,17 @@
                                     </div>
 									<div class="form-group">
                                         <label for="exampleInputEmail1">Alamat</label>
-                                        <input type="text" class="form-control" id="alamat"  name="alamat" readonly>
+                                        <input type="text" class="form-control" id="alamat" name="alamat" readonly>
                                     </div>
 									<div class="form-group">
                                         <label for="exampleInputEmail1">Driver/Kurir</label>
-                                        <input type="text" class="form-control"   name="driver">
+                                        <input type="text" class="form-control @error('driver') is-invalid @enderror"   name="driver">
+										<span style="color: red">@error('driver') {{ $message }} @enderror</span>
                                     </div>
 									<div class="form-group">
                                         <label for="exampleInputEmail1">No Hp Driver/Kurir</label>
-                                        <input type="text" class="form-control"   name="no_hp">
-                                    </div>
-									<div class="form-group">
-                                        <label for="exampleInputEmail1">No Hp Driver/Kurir</label>
-                                        <input type="text" class="form-control"   name="no_hp">
+                                        <input type="number" class="form-control @error('no_hp') is-invalid @enderror"   name="no_hp">
+										<span style="color: red">@error('no_hp') {{ $message }} @enderror</span>
                                     </div>
 									<div class="form-group">
                                         <label for="exampleInputEmail1">Nomor Polisi Kendaraan</label>
@@ -74,7 +75,8 @@
                                     </div>
 									<div class="form-group">
                                         <label for="exampleInputEmail1">Keterangan</label>
-                                        <textarea class="form-control"   name="ket"></textarea>
+                                        <textarea class="form-control @error('ket') is-invalid @enderror"   name="ket"></textarea>
+										<span style="color: red">@error('ket') {{ $message }} @enderror</span>
                                     </div>
                                     </div>
                                     <!-- /.card-body -->
@@ -84,6 +86,7 @@
                                     </div>
                                     </div>
                                     </form>
+									@endforeach
 									</div>
 								</div>
 							</div>
