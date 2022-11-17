@@ -60,13 +60,35 @@ class BarangKeluarController extends Controller
             DB::transaction(function () use ($request) {
                 // upload image
                 // print_r($request->all()); die();
-
-                DB::table('barang_keluar')->insert(
-                    [
-                        'id_barang' => $request->barang,
-                        'jumlah' => $request->jumlah
-                    ]
-                );
+               $cekbarang = DB::table('barang_keluar')
+                            ->where('id_barang',$request->barang)
+                            ->where('status',0)
+                            ->count();
+                           
+                if($cekbarang > 0){
+                    $cekqty = DB::table('barang_keluar')
+                    ->where('id_barang',$request->barang)
+                    ->where('status',0)
+                    ->get();
+                    // DD($cekqty[0]->jumlah);
+                    DB::table('barang_keluar')
+                    ->where('id_barang',$request->barang)
+                    ->where('status',0)
+                    ->update(
+                        [
+                            'id_barang' => $request->barang,
+                            'jumlah' => $request->jumlah + $cekqty[0]->jumlah
+                        ]
+                    );
+                }else{
+                    DB::table('barang_keluar')->insert(
+                        [
+                            'id_barang' => $request->barang,
+                            'jumlah' => $request->jumlah
+                        ]
+                    );
+                }
+                
             });
 
             return back()->with('status', 'trueinsert');

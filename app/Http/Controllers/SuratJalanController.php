@@ -50,7 +50,7 @@ class SuratJalanController extends Controller
         // ]);
             try{
                 DB::transaction(function () use($request) {
-                    $surat = DB::table('surat_jalan')->insert([
+                     DB::table('surat_jalan')->insert([
                         'no_surat' => $request->no_surat,
                         'no_trx' => $request->no_trx,
                         'no_hp' => $request->no_hp,
@@ -59,6 +59,9 @@ class SuratJalanController extends Controller
                         'driver' => $request->no_hp,
                         'nopol' => $request->nopol,
                         'ket' => $request->ket
+                    ]);
+                    DB::table('barang_keluar')->where('no_trx',$request->no_trx)->update([
+                        'surat' => 1
                     ]);
                 });
                 return redirect('/suratjalan')->with('success','Data Berhasil Disimpan');
@@ -141,13 +144,19 @@ class SuratJalanController extends Controller
     public function cetak($no_trx){
         $cetaksurat =  DB::table('surat_jalan')
         ->join('barang_keluar','barang_keluar.no_trx','surat_jalan.no_trx')
-        ->join('pelanggan','pelanggan.id','=','surat_jalan.id_pelanggan')
-
-        ->select('surat_jalan.*','barang_keluar.id_barang as barang_id','pelanggan.nama as nama_pelanggan','barang_keluar.jumlah as jml')
+        ->join('barang','barang.id','barang_keluar.id_barang')
+        ->join('satuan','satuan.id','barang.id_satuan')
+        ->select('surat_jalan.no_surat','barang_keluar.id_barang as barang_id','barang_keluar.jumlah as jml','barang.nama as nama_barang','satuan.nama as nama_satuan')
         ->where('surat_jalan.no_trx',$no_trx)
-    
         ->get();
-        return view('suratjalan.cetak',compact('cetaksurat'));
+
+        $pelanggan = DB::table('surat_jalan')
+        ->join('pelanggan','pelanggan.id','surat_jalan.id_pelanggan')
+        ->groupBy('pelanggan.nama')
+        ->get(array(
+            'pelanggan.nama as nama_pelanggan'
+        ));
+        return view('suratjalan.cetak',compact('cetaksurat','pelanggan'));
 
         // DD($cetaksurat);
     }

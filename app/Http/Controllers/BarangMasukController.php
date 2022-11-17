@@ -60,16 +60,37 @@ class BarangMasukController extends Controller
     public function store(Request $request)
     {
         try {
+            
             DB::transaction(function () use ($request) {
                 // upload image
                 // print_r($request->all()); die();
-
-                DB::table('barang_masuk')->insert(
+                $cek = DB::table('barang_masuk')
+                ->where('id_barang',$request->barang)
+                ->where('status',0)
+                ->count();
+                if($cek > 0){
+                $cekqty = DB::table('barang_masuk')
+                ->where('id_barang',$request->barang)
+                ->where('status',0)
+                ->get();
+                DB::table('barang_masuk')
+                ->where('id_barang',$request->barang)
+                ->where('status',0)
+                ->update(
                     [
                         'id_barang' => $request->barang,
-                        'jumlah' => $request->jumlah
+                        'jumlah' => $request->jumlah + $cekqty[0]->jumlah
                     ]
                 );
+                }else{
+                    DB::table('barang_masuk')->insert(
+                        [
+                            'id_barang' => $request->barang,
+                            'jumlah' => $request->jumlah
+                        ]
+                    );
+                }
+                
             });
 
             return back()->with('status', 'trueinsert');

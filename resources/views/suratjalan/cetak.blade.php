@@ -2,118 +2,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Surat Jalan Cetak</title>
-	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	<link rel="icon" href="../../assets/img/icon.ico" type="image/x-icon"/>
-	@include('layouts.header')
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<title>Document</title>
+	<style>
+		body{
+    margin-top:20px;
+    background:#eee;
+}
+
+.invoice {
+    background: #fff;
+    padding: 20px
+}
+
+.invoice-company {
+    font-size: 20px
+}
+
+.invoice-header {
+    margin: 0 -20px;
+    background: #f0f3f4;
+    padding: 20px
+}
+
+.invoice-date,
+.invoice-from,
+.invoice-to {
+    display: table-cell;
+    width: 1%
+}
+
+.invoice-from,
+.invoice-to {
+    padding-right: 20px
+}
+
+.invoice-date .date,
+.invoice-from strong,
+.invoice-to strong {
+    font-size: 16px;
+    font-weight: 600
+}
+
+.invoice-date {
+    text-align: right;
+    padding-left: 20px
+}
+
+.invoice-price {
+    background: #f0f3f4;
+    display: table;
+    width: 100%
+}
+
+.invoice-price .invoice-price-left,
+.invoice-price .invoice-price-right {
+    display: table-cell;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    width: 75%;
+    position: relative;
+    vertical-align: middle
+}
+
+.invoice-price .invoice-price-left .sub-price {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 20px
+}
+
+.invoice-price small {
+    font-size: 12px;
+    font-weight: 400;
+    display: block
+}
+
+.invoice-price .invoice-price-row {
+    display: table;
+    float: left
+}
+
+.invoice-price .invoice-price-right {
+    width: 25%;
+    background: #2d353c;
+    color: #fff;
+    font-size: 28px;
+    text-align: right;
+    vertical-align: bottom;
+    font-weight: 300
+}
+
+.invoice-price .invoice-price-right small {
+    display: block;
+    opacity: .6;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 12px
+}
+
+.invoice-footer {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    font-size: 10px
+}
+
+.invoice-note {
+    color: #999;
+    margin-top: 80px;
+    font-size: 85%
+}
+
+.invoice>div:not(.invoice-footer) {
+    margin-bottom: 20px
+}
+
+.btn.btn-white, .btn.btn-white.disabled, .btn.btn-white.disabled:focus, .btn.btn-white.disabled:hover, .btn.btn-white[disabled], .btn.btn-white[disabled]:focus, .btn.btn-white[disabled]:hover {
+    color: #2d353c;
+    background: #fff;
+    border-color: #d9dfe3;
+}
+	</style>
 </head>
 <body>
-		@include('layouts.side')
-		<div class="main-panel">
-			<div class="content">
-				<div class="page-inner">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="card">
-								<div class="card-header">
-								<div class="d-flex align-items-center">
-									<h4 class="card-title">Surat Jalan Cetak</h4>
-								</div>
-								</div>
-								<div class="card-body">
-									<div class="table-responsive">
-										<table id="basic-datatables" class="display table table-striped table-hover" >
-											<thead>
-												<tr>
-													<th width="100px">No</th>
-													<th>Nomor Surat</th>
-                                                    <th>Tanggal</th>
-                                                    <th>Barang</th>
-                                                    <th>Jumlah</th>
-                                                    <th>Tujuan</th>
-                                                    <th>Driver</th>
-												</tr>
-											</thead>
-											<tbody>
-												@php $no = 1; @endphp
-												@foreach ($cetaksurat as $row)
-												<tr>
-													<td>{{$no++}}</td>
-													<td>{{$row->no_surat}}</td>
-                                                    <td>{{$row->tgl}}</td>
-                                                    <td>{{ $row->barang_id }}</td>
-                                                    <td>{{ $row->jml }}</td>
-                                                    <td>{{$row->nama_pelanggan}}</td>
-                                                    <td>{{$row->driver}}</td>
-													{{-- <td>
-														<div class="form-button-action">
-															<button type="button" onclick="window.location.href='/suratjalancetak/{{ $row->no_trx }}'" class="btn btn-primary btn-sm">
-																Cetak
-														    </button>
-														</div>
-													</td> --}}
-												</tr>
-												@endforeach
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		
-	</div>
-	@include('layouts.script')
-	@include('sweetalert::alert')
-	<!-- Datatables -->
-	<script src="{{asset('template')}}/assets/js/plugin/datatables/datatables.min.js"></script>
-	
-	<script>
-		$(document).ready(function() {
-			$('#basic-datatables').DataTable({
-			});
-
-			$('#multi-filter-select').DataTable( {
-				"pageLength": 5,
-				initComplete: function () {
-					this.api().columns().every( function () {
-						var column = this;
-						var select = $('<select class="form-control"><option value=""></option></select>')
-						.appendTo( $(column.footer()).empty() )
-						.on( 'change', function () {
-							var val = $.fn.dataTable.util.escapeRegex(
-								$(this).val()
-								);
-
-							column
-							.search( val ? '^'+val+'$' : '', true, false )
-							.draw();
-						} );
-
-						column.data().unique().sort().each( function ( d, j ) {
-							select.append( '<option value="'+d+'">'+d+'</option>' )
-						} );
-					} );
-				}
-			});
-
-			// Add Row
-			$('#add-row').DataTable({
-				"pageLength": 5,
-			});
-
-			var action = '<td> <div class="form-button-action"> <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
-
-			
-		});
-
-		
-		
-	</script>
+<div class="container">
+   <div class="col-md-12">
+      <div class="invoice">
+         <!-- begin invoice-company -->
+         <div class="invoice-company text-inverse f-w-600">
+            <span class="pull-right hidden-print">
+            <a href="javascript:;" class="btn btn-sm btn-white m-b-10 p-l-5"><i class="fa fa-file t-plus-1 text-danger fa-fw fa-lg"></i> Export as PDF</a>
+            <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-white m-b-10 p-l-5"><i class="fa fa-print t-plus-1 fa-fw fa-lg"></i> Print</a>
+            </span>
+            Company Name, Inc
+         </div>
+         <!-- end invoice-company -->
+         <!-- begin invoice-header -->
+         <div class="invoice-header">
+            <div class="invoice-from">
+               <small>from</small>
+               <address class="m-t-5 m-b-5">
+                  <strong class="text-inverse">Twitter, Inc.</strong><br>
+                  Street Address<br>
+                  City, Zip Code<br>
+                  Phone: (123) 456-7890<br>
+                  Fax: (123) 456-7890
+               </address>
+            </div>
+            <div class="invoice-to">
+               <small>to</small>
+			   @foreach($pelanggan as $p )
+               <address class="m-t-5 m-b-5">
+                  <strong class="text-inverse">{{ $p->nama_pelanggan }}</strong><br>
+                  Street Address<br>
+                  City, Zip Code<br>
+                  Phone: (123) 456-7890<br>
+                  Fax: (123) 456-7890
+               </address>
+			   @endforeach
+            </div>
+            <div class="invoice-date">
+               <small>Invoice / July period</small>
+               <div class="date text-inverse m-t-5">August 3,2012</div>
+               <div class="invoice-detail">
+                  #0000123DSS<br>
+                  Services Product
+               </div>
+            </div>
+         </div>
+         <!-- end invoice-header -->
+         <!-- begin invoice-content -->
+         <div class="invoice-content">
+            <!-- begin table-responsive -->
+            <div class="table-responsive">
+               <table class="table table-invoice">
+                  <thead>
+                     <tr>
+                        <th>TASK DESCRIPTION</th>
+                        <th class="text-center" width="10%">Jumlah</th>
+                        <th class="text-center" width="10%">Satuan</th>
+                        <th class="text-right" width="20%">LINE TOTAL</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+					@foreach($cetaksurat as $c)
+                     <tr>
+                        <td>
+                           <span class="text-inverse">{{ $c->nama_barang }}</span><br>
+                        </td>
+                        <td class="text-center">{{ $c->jml }}</td>
+                        <td class="text-center">{{ $c->nama_satuan }}</td>
+                     </tr>
+					 @endforeach
+                  </tbody>
+               </table>
+            </div>
+            <!-- end table-responsive -->
+            <!-- begin invoice-price -->
+            <div class="invoice-price">
+               <div class="invoice-price-left">
+                  <div class="invoice-price-row">
+                     <div class="sub-price">
+                        <small>SUBTOTAL</small>
+                        <span class="text-inverse">$4,500.00</span>
+                     </div>
+                     <div class="sub-price">
+                        <i class="fa fa-plus text-muted"></i>
+                     </div>
+                     <div class="sub-price">
+                        <small>PAYPAL FEE (5.4%)</small>
+                        <span class="text-inverse">$108.00</span>
+                     </div>
+                  </div>
+               </div>
+               <div class="invoice-price-right">
+                  <small>TOTAL</small> <span class="f-w-600">$4508.00</span>
+               </div>
+            </div>
+            <!-- end invoice-price -->
+         </div>
+         <!-- end invoice-content -->
+         <!-- begin invoice-note -->
+         <div class="invoice-note">
+            * Make all cheques payable to [Your Company Name]<br>
+            * Payment is due within 30 days<br>
+            * If you have any questions concerning this invoice, contact  [Name, Phone Number, Email]
+         </div>
+         <!-- end invoice-note -->
+         <!-- begin invoice-footer -->
+         <div class="invoice-footer">
+            <p class="text-center m-b-5 f-w-600">
+               THANK YOU FOR YOUR BUSINESS
+            </p>
+            <p class="text-center">
+               <span class="m-r-10"><i class="fa fa-fw fa-lg fa-globe"></i> matiasgallipoli.com</span>
+               <span class="m-r-10"><i class="fa fa-fw fa-lg fa-phone-volume"></i> T:016-18192302</span>
+               <span class="m-r-10"><i class="fa fa-fw fa-lg fa-envelope"></i> rtiemps@gmail.com</span>
+            </p>
+         </div>
+         <!-- end invoice-footer -->
+      </div>
+   </div>
+</div>
 </body>
 </html>
+
